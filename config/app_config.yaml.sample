@@ -1,0 +1,11 @@
+# 微信小程序自动签到配置文件
+signin_type_1:
+  app_configs:
+    lalastation:
+      host: sjwx.lalastation-lh.com
+      app_secret: AE859F714A309237
+      headers:
+        buildingid: ST0002
+        Referer: https://servicewechat.com/wx136aced7fd0686b2/34/page-frame.html
+  user_infos:
+    - {app: lalastation, openid: XXXXXXXXXXXXXXXXXXXXXXXXXX}
