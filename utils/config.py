@@ -22,11 +22,11 @@ class ConfigLoader:
     """
 
     def __init__(self):
-        """初始化配置加载器。"""
+        """初始化配置加载器."""
         self.config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'app_config.yaml')
         self.config_data = self._load_config()
 
-    def _load_config(self) -> dict:
+    def _load_config() -> dict:
         """加载YAML配置文件。
 
         Returns:
@@ -50,7 +50,7 @@ class ConfigLoader:
         """
         return self.config_data.get(app_name, {}).get('app_configs', {})
 
-    def get_user_infos(self, app_name: str) -> List[Dict]:
+    def get_app_user_infos(self, app_name: str) -> List[Dict]:
         """获取指定应用的用户信息列表。
 
         Args:
@@ -60,6 +60,17 @@ class ConfigLoader:
             List[Dict]: 用户信息列表
         """
         return self.config_data.get(app_name, {}).get('user_infos', [])
+
+    def get_common_settings(self, key: str) -> List[Dict]:
+        """获取指定项目的设定信息列表。
+
+        Args:
+            key: 项目名称
+
+        Returns:
+            List[Dict]: 设定信息列表
+        """
+        return self.config_data.get('common', {}).get(key, [])
 
 # 创建全局配置加载器实例
 config_loader = ConfigLoader()
@@ -84,4 +95,15 @@ def get_user_infos(app_name: str) -> List[Dict]:
     Returns:
         List[Dict]: 用户信息列表
     """
-    return config_loader.get_user_infos(app_name)
+    return config_loader.get_app_user_infos(app_name)
+
+def get_common_settings(key: str) -> List[Dict]:
+    """获取设定信息的便捷函数。
+
+    Args:
+        key: 项目名称
+
+    Returns:
+        List[Dict]: 设定信息列表
+    """
+    return config_loader.get_common_settings(key)
