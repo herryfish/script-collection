@@ -1,3 +1,13 @@
+common:
+  # 青龙服务器配置
+  qinglong:
+    host: localhost:5700
+    client_id: XXXXXXXXXXXXXXXXXXXX
+    client_secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  # redis配置
+  redis:
+    host: redis配置
+
 # 微信小程序自动签到配置文件
 signin_type_1:
   app_configs:
