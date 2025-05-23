@@ -36,10 +36,6 @@ config/app_config.yaml
 config/*.yaml
 !config/*.yaml.sample
 
-# 敏感配置文件
-utils/qlapi.py
-!utils/qlapi.py.sample
-
 # 虚拟环境
 venv/
 env/
