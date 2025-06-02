@@ -30,7 +30,6 @@ class ConfigSourceBase(abc.ABC):
         """
         pass
 
-
 class YamlConfigSource(ConfigSourceBase):
     """YAML配置源实现类。
     
@@ -60,7 +59,6 @@ class YamlConfigSource(ConfigSourceBase):
         except Exception as e:
             logger.error(f"加载YAML配置文件失败: {str(e)}")
             return {}
-
 
 class EnvironmentConfigSource(ConfigSourceBase):
     """环境变量配置源实现类。
@@ -101,58 +99,32 @@ class EnvironmentConfigSource(ConfigSourceBase):
                 # 如果设置了前缀，则只处理匹配前缀的环境变量
                 if pattern and not pattern.match(key):
                     continue
-                    
+                
                 # 移除前缀
-                if self.prefix and key.startswith(self.prefix):
-                    key = key[len(self.prefix):]
-                    # 如果前缀后有分隔符，也移除它
-                    if key.startswith(self.separator):
-                        key = key[len(self.separator):]
+                if self.prefix:
+                    key = pattern.sub("", key)
                 
-                # 将环境变量名转换为小写
+                # 转换为小写并分割键名
                 key = key.lower()
+                parts = key.split(self.separator)
                 
-                # 处理嵌套结构
-                if self.separator in key:
-                    self._set_nested_value(config, key.split(self.separator), value)
-                else:
-                    config[key] = value
-                    
+                # 递归设置嵌套值
+                current = config
+                for part in parts[:-1]:
+                    current = current.setdefault(part, {})
+                current[parts[-1]] = value
+            
             return config
         except Exception as e:
             logger.error(f"加载环境变量配置失败: {str(e)}")
             return {}
-    
-    def _set_nested_value(self, config: dict, keys: List[str], value: str) -> None:
-        """设置嵌套字典的值。
-        
-        Args:
-            config: 配置字典
-            keys: 键路径列表
-            value: 要设置的值
-        """
-        current = config
-        for i, key in enumerate(keys):
-            if i == len(keys) - 1:
-                # 最后一个键，设置值
-                current[key] = value
-            else:
-                # 中间键，确保存在嵌套字典
-                if key not in current:
-                    current[key] = {}
-                current = current[key]
-
 
 class ConfigLoader:
-    """配置加载类，用于读取和管理配置数据。
-
-    支持从多种来源加载配置数据，默认使用YAML文件。
-
-    Attributes:
-        config_source: 配置源对象
-        config_data: 加载的配置数据
+    """配置加载器，用于管理和访问配置数据。
+    
+    支持从不同配置源加载配置数据，并提供统一的访问接口。
     """
-
+    
     def __init__(self, config_source: Optional[ConfigSourceBase] = None):
         """初始化配置加载器。
         
@@ -166,7 +138,7 @@ class ConfigLoader:
             
         self.config_source = config_source
         self.config_data = self._load_config()
-
+    
     def _load_config(self) -> dict:
         """加载配置数据。
 
@@ -174,43 +146,34 @@ class ConfigLoader:
             dict: 配置数据字典
         """
         return self.config_source.load_config()
-
-    def get_app_configs(self, app_name: str) -> Dict:
-        """获取指定应用的配置信息。
-
-        Args:
-            app_name: 应用名称
-
+    
+    def get_app_configs(self) -> Dict[str, Any]:
+        """获取应用配置数据。
+        
         Returns:
-            Dict: 应用配置字典
+            Dict[str, Any]: 应用配置数据字典
         """
-        return self.config_data.get(app_name, {}).get('app_configs', {})
-
-    def get_app_user_infos(self, app_name: str) -> List[Dict]:
-        """获取指定应用的用户信息列表。
-
-        Args:
-            app_name: 应用名称
-
+        return self.config_data.get('app_configs', {})
+    
+    def get_user_infos(self) -> List[Dict[str, Any]]:
+        """获取用户信息数据。
+        
         Returns:
-            List[Dict]: 用户信息列表
+            List[Dict[str, Any]]: 用户信息数据列表
         """
-        return self.config_data.get(app_name, {}).get('user_infos', [])
-
-    def get_common_settings(self, key: str) -> List[Dict]:
-        """获取指定项目的设定信息列表。
-
+        return self.config_data.get('user_infos', [])
+    
+    def get_common_settings(self, key: Optional[str] = None) -> Any:
+        """获取通用设置数据。
+        
         Args:
-            key: 项目名称
-
+            key: 设置键名，如果为None则返回所有通用设置
+            
         Returns:
-            List[Dict]: 设定信息列表
+            Any: 通用设置数据
         """
-        return self.config_data.get('common', {}).get(key, [])
-
-# 创建全局配置加载器实例
-config_loader = ConfigLoader()
-
+        common_settings = self.config_data.get('common', {})
+        return common_settings.get(key) if key else common_settings
 
 def set_config_source(config_source: ConfigSourceBase) -> None:
     """设置全局配置加载器的配置源。
@@ -223,35 +186,33 @@ def set_config_source(config_source: ConfigSourceBase) -> None:
     global config_loader
     config_loader = ConfigLoader(config_source)
 
-def get_app_configs(app_name: str) -> Dict:
-    """获取应用配置的便捷函数。
+# 创建全局配置加载器实例
+config_loader = ConfigLoader()
 
-    Args:
-        app_name: 应用名称
-
+# 导出便捷函数
+def get_app_configs() -> Dict[str, Any]:
+    """获取应用配置数据的便捷函数。
+    
     Returns:
-        Dict: 应用配置字典
+        Dict[str, Any]: 应用配置数据字典
     """
-    return config_loader.get_app_configs(app_name)
+    return config_loader.get_app_configs()
 
-def get_user_infos(app_name: str) -> List[Dict]:
-    """获取用户信息的便捷函数。
-
-    Args:
-        app_name: 应用名称
-
+def get_user_infos() -> List[Dict[str, Any]]:
+    """获取用户信息数据的便捷函数。
+    
     Returns:
-        List[Dict]: 用户信息列表
+        List[Dict[str, Any]]: 用户信息数据列表
     """
-    return config_loader.get_app_user_infos(app_name)
+    return config_loader.get_user_infos()
 
-def get_common_settings(key: str) -> List[Dict]:
-    """获取设定信息的便捷函数。
-
+def get_common_settings(key: Optional[str] = None) -> Any:
+    """获取通用设置数据的便捷函数。
+    
     Args:
-        key: 项目名称
-
+        key: 设置键名，如果为None则返回所有通用设置
+        
     Returns:
-        List[Dict]: 设定信息列表
+        Any: 通用设置数据
     """
     return config_loader.get_common_settings(key)
