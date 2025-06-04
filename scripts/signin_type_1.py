@@ -3,9 +3,12 @@
 """
 文件名：signin_type_1.py
 描述：自动化签到脚本，支持多个微信小程序的自动登录和签到功能
+      已知支持的应用：
+      1. LaLa station
+      2. 鑫耀光环
 作者：herryfish
 创建日期：2024-03-17
-最后修改：2024-03-17
+最后修改：2025-05-24
 """
 
 import json
@@ -128,13 +131,13 @@ class AppBase:
         })
 
         try:
-            logger.info(f"{self.login_url} 登录请求参数: {json_data}")
             response = requests.post(self.login_url,
                                    json=json_data,
                                    headers=self.comm_headers)
             response.raise_for_status()
 
             result = response.json()
+            logger.info(f"{self.app_name} 登录请求结果: {result}")
             if not result['success']:
                 load_send(self.app_name, response.text)
                 logger.error(f"{self.app_name}: {response.content}")
@@ -161,6 +164,7 @@ class AppBase:
             response.raise_for_status()
 
             result = response.json()
+            logger.info(f"{self.app_name} 签到请求结果: {result}")
             if not result['success']:
                 # 解码错误信息中的字节字符串
                 error_msg = result.get('msg', '')
@@ -188,7 +192,6 @@ class AppBase:
 if __name__ == '__main__':
     """主函数，执行自动登录和签到流程。"""
     accounts = get_user_infos(APP)
-    logger.info(accounts)
     if not accounts:
         logger.error("未找到有效的账户配置信息")
         exit(1)
