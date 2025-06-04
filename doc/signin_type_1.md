@@ -1,6 +1,6 @@
 # 微信小程序自动签到脚本
 
-## 功能描述
+## 功能说明
 
 本脚本实现了微信小程序的自动登录和签到功能。主要特点：
 
@@ -22,9 +22,13 @@
 
 ## 配置说明
 
-### 配置文件
+配置文件支持两种方式：
+1. YAML文件配置（默认）
+2. 环境变量配置
 
-配置文件位于 `config/app_config.yaml`，需要根据示例配置文件 `app_config.yaml.sample` 进行配置：
+### YAML文件配置
+
+在 `config/app_config.yaml` 中配置以下信息：
 
 ```yaml
 common:
@@ -87,10 +91,7 @@ SIGNIN_TYPE_1__USER_INFOS__0__OPENID=XXXXXXXXXXXXXXXXXXXXXXXXXX
    cp config/app_config.yaml.sample config/app_config.yaml
    ```
 
-2. 修改配置文件，填入正确的配置信息：
-   - 设置正确的 host 和 app_secret
-   - 配置正确的请求头信息
-   - 填入用户的 OpenID
+2. 编辑配置文件，填入实际的配置信息
 
 3. 运行脚本：
    ```bash
