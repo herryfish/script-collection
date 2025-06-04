@@ -155,13 +155,19 @@ class ConfigLoader:
         """
         return self.config_data.get('app_configs', {})
     
-    def get_user_infos(self) -> List[Dict[str, Any]]:
+    def get_user_infos(self, app_name: Optional[str] = None) -> List[Dict[str, Any]]:
         """获取用户信息数据。
         
+        Args:
+            app_name: 应用名称，如果提供则只返回该应用的用户信息
+            
         Returns:
             List[Dict[str, Any]]: 用户信息数据列表
         """
-        return self.config_data.get('user_infos', [])
+        user_infos = self.config_data.get('user_infos', [])
+        if app_name:
+            return [user for user in user_infos if user.get('app') == app_name]
+        return user_infos
     
     def get_common_settings(self, key: Optional[str] = None) -> Any:
         """获取通用设置数据。
@@ -198,13 +204,16 @@ def get_app_configs() -> Dict[str, Any]:
     """
     return config_loader.get_app_configs()
 
-def get_user_infos() -> List[Dict[str, Any]]:
+def get_user_infos(app_name: Optional[str] = None) -> List[Dict[str, Any]]:
     """获取用户信息数据的便捷函数。
     
+    Args:
+        app_name: 应用名称，如果提供则只返回该应用的用户信息
+        
     Returns:
         List[Dict[str, Any]]: 用户信息数据列表
     """
-    return config_loader.get_user_infos()
+    return config_loader.get_user_infos(app_name)
 
 def get_common_settings(key: Optional[str] = None) -> Any:
     """获取通用设置数据的便捷函数。
