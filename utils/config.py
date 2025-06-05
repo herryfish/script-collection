@@ -147,13 +147,18 @@ class ConfigLoader:
         """
         return self.config_source.load_config()
     
-    def get_app_configs(self) -> Dict[str, Any]:
+    def get_app_configs(self, app_name: Optional[str] = None) -> Dict[str, Any]:
         """获取应用配置数据。
         
         Returns:
             Dict[str, Any]: 应用配置数据字典
         """
-        return self.config_data.get('app_configs', {})
+        if app_name:
+            data = self.config_data.get(app_name, {})
+        else:
+            data = self.config_data
+
+        return data.get('app_configs', {})  
     
     def get_user_infos(self, app_name: Optional[str] = None) -> List[Dict[str, Any]]:
         """获取用户信息数据。
@@ -164,9 +169,13 @@ class ConfigLoader:
         Returns:
             List[Dict[str, Any]]: 用户信息数据列表
         """
-        user_infos = self.config_data.get('user_infos', [])
         if app_name:
-            return [user for user in user_infos if user.get('app') == app_name]
+            data = self.config_data.get(app_name, {})
+        else:
+            data = self.config_data
+
+        user_infos = data.get('user_infos', []) 
+        
         return user_infos
     
     def get_common_settings(self, key: Optional[str] = None) -> Any:
@@ -196,13 +205,13 @@ def set_config_source(config_source: ConfigSourceBase) -> None:
 config_loader = ConfigLoader()
 
 # 导出便捷函数
-def get_app_configs() -> Dict[str, Any]:
+def get_app_configs(app_name: Optional[str] = None) -> Dict[str, Any]:
     """获取应用配置数据的便捷函数。
     
     Returns:
         Dict[str, Any]: 应用配置数据字典
     """
-    return config_loader.get_app_configs()
+    return config_loader.get_app_configs(app_name)
 
 def get_user_infos(app_name: Optional[str] = None) -> List[Dict[str, Any]]:
     """获取用户信息数据的便捷函数。
