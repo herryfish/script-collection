@@ -19,3 +19,15 @@ signin_type_1:
         Referer: https://servicewechat.com/wx136aced7fd0686b2/34/page-frame.html
   user_infos:
     - {app: lalastation, openid: XXXXXXXXXXXXXXXXXXXXXXXXXX}
+
+# 什么值得买
+smzdm:
+  user_infos:
+    - {name: XXXXXX, cookie: 'sess=XXXXXXXXXXXXXXXXXXXXXXXXXX;'}
+  app_configs:
+    topic_page_list:
+      - gozz9w/248vt1 # 科沃斯618活动
+    lottery_list:
+      - xYoEV2eEr4    # ~2025-07-01 家的一万种可能三期我家超智能
+    activity_list:
+      - 810           # 活动任务家的一万种可能-我家超智能

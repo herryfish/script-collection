@@ -11,9 +11,11 @@ project/
 ├── config/             # 配置文件目录
 │   └── app_config.yaml # 应用配置文件
 ├── doc/                # 文档目录
-│   └── signin_type_1.md # 具体脚本的说明文档
+│   ├── signin_type_1.md # 微信小程序自动签到脚本说明文档
+│   └── smzdm.md        # 什么值得买自动化脚本说明文档
 ├── scripts/            # 脚本文件目录
-│   └── signin_type_1.py # 微信小程序自动签到脚本
+│   ├── signin_type_1.py # 微信小程序自动签到脚本
+│   └── smzdm.py        # 什么值得买自动化脚本
 ├── utils/              # 工具模块目录
 │   ├── __init__.py
 │   ├── config.py      # 配置管理模块
@@ -45,6 +47,13 @@ project/
 - 多账号管理
 - 详细的运行日志
 
+### 5. 什么值得买自动化（scripts/smzdm.py）
+- 自动签到并获取奖励
+- 自动完成日常任务
+- 自动参与活动和抽奖
+- 多账号管理
+- 错误重试机制
+
 ## 配置说明
 
 1. 复制配置文件模板：
@@ -52,25 +61,40 @@ project/
 cp config/app_config.yaml.sample config/app_config.yaml
 ```
 
-2. 修改配置文件，填入实际的配置信息
+2. 修改配置文件，填入实际的配置信息：
+   - 微信小程序自动签到：配置openid和应用信息
+   - 什么值得买自动化：配置cookie和活动ID列表
 
-3. 也可以使用环境变量进行配置，具体参考各脚本的说明文档
+3. 也可以使用环境变量进行配置，具体参考各脚本的说明文档：
+   - [微信小程序自动签到配置说明](doc/signin_type_1.md)
+   - [什么值得买自动化配置说明](doc/smzdm.md)
 
 ## 使用方法
 
 ### 1. 安装依赖
 
 ```bash
-ql repo https://github.com/herryfish/script-collection.git "signin_" "" "utils"
+ql repo https://github.com/herryfish/script-collection.git "scripts" "" "utils"
 ```
 
 ### 2. 配置脚本
 
-参考各脚本目录下的说明文档进行配置
+参考各脚本目录下的说明文档进行配置：
+- [微信小程序自动签到配置](doc/signin_type_1.md)
+- [什么值得买自动化配置](doc/smzdm.md)
 
 ### 3. 运行脚本
 
-可以手动运行或在青龙面板中配置定时任务
+可以手动运行：
+```bash
+# 运行微信小程序自动签到
+python scripts/signin_type_1.py
+
+# 运行什么值得买自动化
+python scripts/smzdm.py
+```
+
+或在青龙面板中配置定时任务
 
 ## 扩展指南
 
