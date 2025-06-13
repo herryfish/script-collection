@@ -5,7 +5,8 @@
 描述：什么值得买自动签到、任务完成和抽奖脚本
 作者：herryfish
 创建日期：2025-01-01
-最后修改：2025-06-08
+最后修改：2025-06-12
+版本：1.0
 """
 # 标准库
 import base64
@@ -81,7 +82,7 @@ class SMZDM():
     activity_list = []
     
     # 常量定义
-    TIMEOUT = 10
+    TIMEOUT = 20
     MAX_RETRIES = 3
     RETRY_DELAY = 2
     app_ver = '10.4.1'
