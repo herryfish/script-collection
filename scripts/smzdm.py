@@ -387,7 +387,7 @@ class SMZDM():
                 self._activity_task_receive(task["task_id"], token, self.headers)
                 time.sleep(2)
         else:
-            logger.info(
+            logger.debug(
                 f'Task {task["task_name"]}({task["task_id"]}) 任务 '
                 f'{"已完成" if task["task_status"] == 4 else "类型" + task["task_event_type"] + "我做不来"}。'
             )
