@@ -63,3 +63,9 @@ cover/
 # trea规则文件
 rules/
 *.rules
+.trae/
+
+# 临时文件
+*.tmp
+*.tmp.*
+temp/
