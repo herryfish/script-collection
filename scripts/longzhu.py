@@ -168,7 +168,7 @@ class longzhu_question(longzhu):
             logger.debug(f"回答问题响应: {res.text}")
             ret_json = res.json()
             if ret_json.get('code') == '0000':
-                logger.info(f'回答问题结果：{ret_json.get('data')}')
+                logger.info(f"回答问题结果：{ret_json.get('data')}")
                 return True
             else:
                 logger.error(f"回答问题失败: {ret_json.get('message')}")
